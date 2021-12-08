@@ -1,20 +1,22 @@
 const express = require('express')
+const bodyParser = require('body-parser') // npm install body-parser, which basically does the job of parsing the code, like buffering the data stream before
 
 const app = express()
 
-app.use('/add-product',(req, res, next) => {
-    console.log('another middleware')
-    res.send('<h1>Product</h1>') // send method is like write method, it allow you to send back a response
-})
+app.use(bodyParser.urlencoded({extended: false})) // use method allow you to use middleware which is how expressJS works
+// in this case the the bodyParser funciton is running as middleware. The urlenconded method and its argument after is the default for parsing this type of data
 
-app.use((req, res, next) => { // use method runs takes a function as its first argument, and this function will be executed for every incomeng request
-    console.log('IN the middleware') // this function has 3 args, request, response, and next, which is actually a function
-    next()
-}) // next allows the request to continue to the next use method
-// use method allow you to use middleware which is how expressJS works
+app.use('/add-product',(req, res, next) => { // here the first arg of use() method is the route next is a callback function w/ request, response and next as args
+    console.log('add-product page')
+    res.send('<h1>Add product</h1><form action="/product" method="POST"><input name="title" type="text"><button type="submit>Add Product</button></input></form>')
+}) // send method allows you to send back response
 
-app.use((req, res, next) => {
-    console.log('another middleware')
+app.post('/product', (req, res, next) => { // post method is like a use() method, but limited to POST requests, where as .use() is for all
+    console.log(req.body)
+    res.redirect('/') // redirect method redirects to where you want
+}) 
+
+app.use('/', (req, res, next) => {
     res.send('<h1>Hello</h1>')
 })
 
