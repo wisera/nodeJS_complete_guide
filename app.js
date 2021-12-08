@@ -1,12 +1,47 @@
-const http = require('http'); // require() method imports modules, in this case is importing http core module
+const express = require('express')
 
-const routes = require('./routes'); // imports the routing logic from another file
+const app = express()
+
+app.use('/add-product',(req, res, next) => {
+    console.log('another middleware')
+    res.send('<h1>Product</h1>') // send method is like write method, it allow you to send back a response
+})
+
+app.use((req, res, next) => { // use method runs takes a function as its first argument, and this function will be executed for every incomeng request
+    console.log('IN the middleware') // this function has 3 args, request, response, and next, which is actually a function
+    next()
+}) // next allows the request to continue to the next use method
+// use method allow you to use middleware which is how expressJS works
+
+app.use((req, res, next) => {
+    console.log('another middleware')
+    res.send('<h1>Hello</h1>')
+})
+
+app.listen(3000) // listen method for express does behind the scenes the http.startServer for you
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// Code below uses OLD-routes.js external file to start nodeJS server manually //
+
+/* const routes = require('./routes'); // imports the routing logic from another file
 
 // const fs = require('fs') // imports the file system core module
 
 const server = http.createServer(routes); // routes is the constant that holds the function that would go inside .createServer method, which is below
 
-server.listen(5000)
+server.listen(3000) */
 
 // NOTES //
 // The code below has all the logic to have a running nodeJS server
