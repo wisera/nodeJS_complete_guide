@@ -1,27 +1,6 @@
-const http = require('http'); // require() method imports modules, in this case is importing http core module
+const fs = require('fs') // imports the file system core module
 
-const routes = require('./routes'); // imports the routing logic from another file
-
-// const fs = require('fs') // imports the file system core module
-
-const server = http.createServer(routes); // routes is the constant that holds the function that would go inside .createServer method, which is below
-
-server.listen(5000)
-
-// NOTES //
-// The code below has all the logic to have a running nodeJS server
-// it has been moved to a separate file to be imported 
-
-// the createServer() method on the http function has a callback function as its first argument
-// this callback function is called requestListener
-// in this function the first argument is the request and the second the response
-// this method returns a Server object which is your actual nodeJS server
-// then you can call a method on this server object to listen on a specific port and there you can interact w/ it
-// req is the http request, when a user access a page
-// res is the http response, what the server responds to a certain http request
-// res.write() method writes whatever you want back to the request 
-
-/* const server = http.createServer((req, res) => { 
+const requestHandler = (req, res) => {
     console.log(req) // logs the the incoming requests into terminal
     const url = req.url; // stores the request url in a constant
     const method = req.method;
@@ -61,7 +40,6 @@ server.listen(5000)
     res.write('<body><h1>hello from Node.js server</body></h1>')
     res.write('</html>')
     res.end() // must have a end() to stop
-}) 
+}
 
-server.listen(3000) // server is now live on port 3000 w/ the simple html page displayed */
-
+module.exports = requestHandler; // makes this file into a module, so it can be imported in the app.js file
