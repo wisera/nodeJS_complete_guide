@@ -1,26 +1,24 @@
-const express = require('express')
-const bodyParser = require('body-parser') // npm install body-parser, which basically does the job of parsing the code, like buffering the data stream before
+const express = require('express');
+const bodyParser = require('body-parser'); // npm install body-parser, which basically does the job of parsing the code, like buffering the data stream before
+const path = require('path')
 
-const app = express()
+const app = express();
 
-app.use(bodyParser.urlencoded({extended: false})) // use method allow you to use middleware which is how expressJS works
+const adminRoutes = require('./routes/admin');
+const shopRoutes = require('./routes/shop');
+
+
+app.use(bodyParser.urlencoded({extended: false})); // use method allow you to use middleware which is how expressJS works
 // in this case the the bodyParser funciton is running as middleware. The urlenconded method and its argument after is the default for parsing this type of data
+app.use(express.static(path.join(__dirname, 'public')));
+app.use('/admin', adminRoutes); // using const of imported local module, the /admin before filters all adminRoutes to /admin/adminRoutes
+app.use(shopRoutes);
 
-app.use('/add-product',(req, res, next) => { // here the first arg of use() method is the route next is a callback function w/ request, response and next as args
-    console.log('add-product page')
-    res.send('<h1>Add product</h1><form action="/product" method="POST"><input name="title" type="text"><button type="submit>Add Product</button></input></form>')
-}) // send method allows you to send back response
-
-app.post('/product', (req, res, next) => { // post method is like a use() method, but limited to POST requests, where as .use() is for all
-    console.log(req.body)
-    res.redirect('/') // redirect method redirects to where you want
-}) 
-
-app.use('/', (req, res, next) => {
-    res.send('<h1>Hello</h1>')
+app.use((req, res, next) => { // any other url 
+    res.status(404).sendFile(path.join(__dirname, 'views', '404.html')) 
 })
 
-app.listen(3000) // listen method for express does behind the scenes the http.startServer for you
+app.listen(3000); // listen method for express does behind the scenes the http.startServer for you
 
 
 
