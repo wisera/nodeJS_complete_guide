@@ -4,8 +4,12 @@ const path = require('path')
 
 const app = express();
 
+app.set('view engine', 'ejs') // sets template engine, first arg is built in and second is the name of the template engine
+
 const adminRoutes = require('./routes/admin');
 const shopRoutes = require('./routes/shop');
+
+const errorController = require('./controllers/error')
 
 
 app.use(bodyParser.urlencoded({extended: false})); // use method allow you to use middleware which is how expressJS works
@@ -14,9 +18,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/admin', adminRoutes); // using const of imported local module, the /admin before filters all adminRoutes to /admin/adminRoutes
 app.use(shopRoutes);
 
-app.use((req, res, next) => { // any other url 
-    res.status(404).sendFile(path.join(__dirname, 'views', '404.html')) 
-})
+app.use(errorController.get404)
 
 app.listen(3000); // listen method for express does behind the scenes the http.startServer for you
 
